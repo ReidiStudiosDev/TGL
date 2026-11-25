@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "reidi-tgl"
+version = "0.3.1"
+description = "Telegram Language Engine by Reidi Studios"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = ["python-telegram-bot>=21.0,<23"]
+
+[project.scripts]
+tgl = "tgl:main"
+
+[tool.setuptools]
+py-modules = ["tgl"]
+packages = ["engine"]

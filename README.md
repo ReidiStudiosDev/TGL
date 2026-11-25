@@ -1,0 +1,104 @@
+# Reidi TGL — TGL Engine 0.3.1
+
+**Telegram Language (TGL)** es un lenguaje de Reidi Studios™ para definir bots de Telegram en archivos `.tgl`. El motor está escrito en Python y utiliza `python-telegram-bot`.
+
+## Requisitos
+
+- Python 3.10 o superior.
+- Un token válido de BotFather (`BOT_TOKEN`).
+- Conexión a Internet para conectar con Telegram.
+
+## Instalación
+
+Desde la carpeta raíz del proyecto:
+
+```bash
+python -m pip install .
+```
+
+Comprueba la instalación:
+
+```bash
+tgl --help
+```
+
+También puedes ejecutar el motor sin instalar el comando global:
+
+```bash
+python tgl.py check "/ruta/al/bot/main.tgl"
+python tgl.py run "/ruta/al/bot/main.tgl"
+```
+
+Una vez instalado, `tgl` puede ejecutarse desde cualquier directorio y recibir la ruta del archivo `.tgl`.
+
+## Comandos
+
+```bash
+tgl check main.tgl
+tgl run main.tgl
+```
+
+`check` analiza la sintaxis sin conectarse a Telegram. `run` inicia el bot.
+
+## Token y configuración
+
+En el archivo `.tgl`:
+
+```tgl
+var BOT_TOKEN = "TOKEN_DE_BOTFATHER";
+```
+
+También se reconoce `TELEGRAM_BOT` como alias. Para separar secretos del código:
+
+```tgl
+var {import variables.txt}
+```
+
+`variables.txt`:
+
+```ini
+BOT_TOKEN=TOKEN_DE_BOTFATHER
+```
+
+No publiques ni compartas el token.
+
+## Archivos importados
+
+Se pueden importar archivos de datos/configuración relativos al archivo `.tgl`:
+
+```tgl
+import ./database.js
+var {import ./variables.txt}
+```
+
+Los bloques `js` y los `.js` importados se interpretan como declaraciones `const`/`let`/`var` con objetos y arrays de datos JSON-compatibles. **No se ejecuta JavaScript arbitrario, Node.js ni módulos npm.**
+
+## Persistencia
+
+Los datos de usuario administrados por el motor se guardan en `.tgl_data.sqlite3`, junto al archivo `.tgl`, para conservarlos entre reinicios. No guardes el token dentro de esa base de datos.
+
+## Sintaxis implementada en esta versión
+
+- `var`, importación de variables y `const` con propiedades.
+- `cmdlist`, `lang` (declaración de códigos), `cmd` con `txt`, `btn`, `file` y `answer`.
+- Botones `inline` y `keyboard`.
+- Identificadores para mensajes: `editmessage.id` y `deletemessage.id`.
+- Acciones `sendmessage`, `editmessage`, `deletemessage`, `start`, `math.operation`, `reset` y `resetmessage`.
+- Comparaciones básicas, comprobación `user is nombreDeArray` y eventos `on @user join` / `on @user leave`.
+- Interpolación `{$variable.propiedad}` y menciones documentadas en `documentation/SYNTAX.md`.
+- Operaciones matemáticas aritméticas seguras y protección contra valores negativos salvo `negativeOn`.
+
+## Límites importantes de esta versión
+
+Esta entrega no debe confundirse con la implementación final de todas las ideas del diseño TGL. En particular:
+
+- `lang` registra los idiomas configurados, pero todavía no traduce automáticamente los mensajes.
+- `js` admite datos serializables, no ejecución de JavaScript general.
+- La gramática de condiciones y acciones complejas está limitada; revisa la referencia y ejecuta `tgl check` antes de iniciar el bot.
+- No se incluye un sistema de plugins ni ejecución de Python externo.
+
+Estas limitaciones se indican expresamente para no presentar como funcional algo que todavía no está conectado.
+
+## Seguridad
+
+No ejecutes archivos `.tgl` de terceros sin revisarlos. Los tokens deben mantenerse privados. Prueba primero el bot en un chat o grupo privado.
